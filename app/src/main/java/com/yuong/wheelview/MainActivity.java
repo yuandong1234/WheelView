@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         StringWheelAdapter mGroupAdapter = new StringWheelAdapter(mGroupItems);
         group.setAdapter(mGroupAdapter);
-        group.setCurrentItem(0);
+        group.setCurrentItem(2);
         StringWheelAdapter mMemberAdapter = new StringWheelAdapter(mMemberItems);
         member.setAdapter(mMemberAdapter);
     }

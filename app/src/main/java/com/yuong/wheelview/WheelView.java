@@ -19,6 +19,7 @@
 
 package com.yuong.wheelview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -32,6 +33,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -84,7 +86,7 @@ public class WheelView extends View {
     private static final int TEXT_SIZE = 18;
 
     /**
-     * Top and bottom items offset (to hide that)
+     * Top and bottom items offset(to hide that)
      */
 
     //TODO
@@ -95,21 +97,18 @@ public class WheelView extends View {
      */
     //TODO
     private static final int ADDITIONAL_ITEMS_SPACE = 10;
-    // private static final int ADDITIONAL_ITEMS_SPACE = 15;
 
     /**
      * Label offset
      */
     //TODO
     private static final int LABEL_OFFSET = 15;
-    // private static final int LABEL_OFFSET = 20;
 
     /**
      * Left and right padding value
      */
     //TODO
     private static final int PADDING = 10;
-    // private static final int PADDING = 20;
 
     /**
      * Default count of visible items
@@ -353,7 +352,6 @@ public class WheelView extends View {
      * @param animated the animation flag
      */
 
-    //TODO
     public void setCurrentItem(int index, boolean animated) {
         if (adapter == null || adapter.getItemsCount() == 0) {
             return; // throw?
@@ -428,47 +426,15 @@ public class WheelView extends View {
      * Initializes resources
      */
     private void initResourcesIfNecessary() {
-        // 获取屏幕像素
-//		WindowManager wm = (WindowManager) BraceletApp.getInstance()
-//				.getSystemService(Context.WINDOW_SERVICE);
-//		int width = wm.getDefaultDisplay().getWidth();
-//		int height = wm.getDefaultDisplay().getHeight();
         if (itemsPaint == null) {
             itemsPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
             itemsPaint.density = getResources().getDisplayMetrics().density;
             itemsPaint.setTextSize((TEXT_SIZE - 2) * itemsPaint.density);
-
-//			if (width == 540 && height == 960) {
-//				ADDITIONAL_ITEM_HEIGHT = 35;
-//				ITEM_OFFSET = TEXT_SIZE / 10;
-//				itemsPaint.setTextSize(25);
-//			} else if (width == 720 && height == 1280) {
-//				ADDITIONAL_ITEM_HEIGHT = 45;
-//				ITEM_OFFSET = TEXT_SIZE / 8;
-//				itemsPaint.setTextSize(35);
-//				ShowLog.i("xxx", "itemsPaint:字体大小111111" + width + " -" + height);
-//			} else {
-//				itemsPaint.setTextSize(54);
-//				// itemsPaint.setTextSize(TEXT_SIZE);
-//			}
         }
         if (valuePaint == null) {
             valuePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.DITHER_FLAG);
             valuePaint.density = getResources().getDisplayMetrics().density;
             valuePaint.setTextSize(TEXT_SIZE * valuePaint.density);
-
-//			if (width == 540 && height == 960) {
-//				valuePaint.setTextSize(25);
-//				ITEM_OFFSET = TEXT_SIZE / 10;
-//				ADDITIONAL_ITEM_HEIGHT = 35;
-//			} else if (width == 720 && height == 1280) {
-//				ADDITIONAL_ITEM_HEIGHT = 45;
-//				ITEM_OFFSET = TEXT_SIZE / 8;
-//				valuePaint.setTextSize(35);// 30
-//			} else {
-//				valuePaint.setTextSize(54);
-//				// valuePaint.setTextSize(TEXT_SIZE);
-//			}
             valuePaint.setShadowLayer(0.1f, 0, 0.1f, 0xFFC0C0C0);
         }
 
@@ -487,8 +453,7 @@ public class WheelView extends View {
         }
 
         if (bottomShadow == null) {
-            bottomShadow = new GradientDrawable(Orientation.BOTTOM_TOP,
-                    SHADOWS_COLORS);
+            bottomShadow = new GradientDrawable(Orientation.BOTTOM_TOP, SHADOWS_COLORS);
         }
         setBackgroundResource(R.drawable.bg_wheel);
     }
@@ -958,8 +923,7 @@ public class WheelView extends View {
             int maxY = isCyclic ? 0x7FFFFFFF : adapter.getItemsCount()
                     * getItemHeight();
             int minY = isCyclic ? -maxY : 0;
-            scroller.fling(0, lastScrollY, 0, (int) -velocityY / 2, 0, 0, minY,
-                    maxY);
+            scroller.fling(0, lastScrollY, 0, (int) -velocityY / 2, 0, 0, minY, maxY);
             setNextMessage(MESSAGE_SCROLL);
             return true;
         }
@@ -988,6 +952,7 @@ public class WheelView extends View {
     }
 
     // animation handler
+    @SuppressLint("HandlerLeak")
     private Handler animationHandler = new Handler() {
         public void handleMessage(Message msg) {
             scroller.computeScrollOffset();
@@ -995,6 +960,7 @@ public class WheelView extends View {
             int delta = lastScrollY - currY;
             lastScrollY = currY;
             if (delta != 0) {
+
                 doScroll(delta);
             }
 
@@ -1005,6 +971,7 @@ public class WheelView extends View {
                 scroller.forceFinished(true);
             }
             if (!scroller.isFinished()) {
+                Log.e("yuandong","2222222222222222222");
                 animationHandler.sendEmptyMessage(msg.what);
             } else if (msg.what == MESSAGE_SCROLL) {
                 justify();
